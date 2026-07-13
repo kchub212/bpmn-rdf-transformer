@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Test and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Generated project files
+data/generated_rdf/
+data/generated_bpmn/
+
+# Local Claude preferences
+CLAUDE.local.md
+.claude/settings.local.json
+
+# VS Code local files
+.vscode/
