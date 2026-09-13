@@ -8,3 +8,7 @@ class BpmnParseError(BpmnError):
 
 class BpmnValidationError(BpmnError):
     """Raised when the internal model breaks a BPMN rule."""
+
+
+class RdfValidationError(BpmnError):
+    """Raised when an RDF graph breaks an sBPMN-level rule."""

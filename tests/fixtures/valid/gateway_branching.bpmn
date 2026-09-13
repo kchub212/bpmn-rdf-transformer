@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<bpmn:definitions
+    xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+    id="Definitions_1"
+    targetNamespace="http://bpmn.io/schema/bpmn">
+
+    <bpmn:process id="Process_1" isExecutable="false">
+
+        <bpmn:startEvent id="Start_1" name="Start" />
+
+        <bpmn:exclusiveGateway id="Gateway_1" name="Decision" />
+
+        <bpmn:task id="Task_A" name="Task A" />
+
+        <bpmn:task id="Task_B" name="Task B" />
+
+        <bpmn:endEvent id="End_A" name="End A" />
+
+        <bpmn:endEvent id="End_B" name="End B" />
+
+        <bpmn:sequenceFlow
+            id="Flow_1"
+            sourceRef="Start_1"
+            targetRef="Gateway_1" />
+
+        <bpmn:sequenceFlow
+            id="Flow_2"
+            sourceRef="Gateway_1"
+            targetRef="Task_A" />
+
+        <bpmn:sequenceFlow
+            id="Flow_3"
+            sourceRef="Gateway_1"
+            targetRef="Task_B" />
+
+        <bpmn:sequenceFlow
+            id="Flow_4"
+            sourceRef="Task_A"
+            targetRef="End_A" />
+
+        <bpmn:sequenceFlow
+            id="Flow_5"
+            sourceRef="Task_B"
+            targetRef="End_B" />
+
+    </bpmn:process>
+
+</bpmn:definitions>

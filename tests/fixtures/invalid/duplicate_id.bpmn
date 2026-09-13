@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<bpmn:definitions
+    xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+    id="Definitions_1"
+    targetNamespace="http://bpmn.io/schema/bpmn">
+
+    <bpmn:process id="Process_1" isExecutable="false">
+
+        <bpmn:startEvent id="Start_1" name="Start" />
+
+        <bpmn:task id="Same_1" name="Task" />
+
+        <bpmn:endEvent id="Same_1" name="End" />
+
+        <bpmn:sequenceFlow
+            id="Flow_1"
+            sourceRef="Start_1"
+            targetRef="Same_1" />
+
+        <bpmn:sequenceFlow
+            id="Flow_2"
+            sourceRef="Same_1"
+            targetRef="Same_1" />
+
+    </bpmn:process>
+
+</bpmn:definitions>

@@ -19,3 +19,30 @@ CLAUDE.local.md
 
 # VS Code local files
 .vscode/
+# Claude / AI context files
+#CLAUDE.md
+#PROJECT_STATUS.md
+#.claude/
+
+# Python environment
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Secrets
+.env
+.env.*
+
+# IDE
+.idea/
+.vscode/
+# Local logs / build metadata
+debug.log
+*.egg-info/
+
+# Thesis folder
+Writing-Bchlr-Latex/
