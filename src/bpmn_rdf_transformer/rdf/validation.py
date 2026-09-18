@@ -65,16 +65,24 @@ def validate_rdf(graph: Graph) -> None:
         if len(ids) != 1 or not str(ids[0]).strip():
             raise RdfValidationError(f"Ressource {element} hat keine gültige sbpmnp:id")
 
-    # Rule 4: sourceRef/targetRef must point at an actual flowNode
-    # (startEvent, endEvent, task or exclusiveGateway), not e.g. another sequenceFlow.
-    # The sBPMN ontology itself declares no range for sourceRef/targetRef, so nothing
-    # at the ontology level stops a malformed graph from doing this.
+    # Rule 4: every sourceRef/targetRef must have exactly one value, and that value
+    # must point at an actual flowNode (startEvent, endEvent, task or exclusiveGateway),
+    # not e.g. another sequenceFlow. The sBPMN ontology itself declares no range for
+    # sourceRef/targetRef, so nothing at the ontology level stops a malformed graph
+    # from having zero, two, or a wrongly-typed value here.
     for flow in graph.subjects(RDF.type, SBPMNC.sequenceFlow):
         for prop in (SBPMNP.sourceRef, SBPMNP.targetRef):
-            for target in graph.objects(flow, prop):
-                target_types = set(graph.objects(target, RDF.type))
-                if not (target_types & FLOW_NODE_CLASSES):
-                    raise RdfValidationError(
-                        f"Sequenzfluss {flow} verweist über {prop} auf {target}, "
-                        "das kein flowNode ist"
-                    )
+            targets = list(graph.objects(flow, prop))
+            if len(targets) != 1:
+                raise RdfValidationError(
+                    f"Sequenzfluss {flow} hat nicht genau einen Wert für {prop} "
+                    f"({len(targets)} gefunden)"
+                )
+
+            target = targets[0]
+            target_types = set(graph.objects(target, RDF.type))
+            if not (target_types & FLOW_NODE_CLASSES):
+                raise RdfValidationError(
+                    f"Sequenzfluss {flow} verweist über {prop} auf {target}, "
+                    "das kein flowNode ist"
+                )

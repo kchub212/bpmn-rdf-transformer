@@ -79,6 +79,30 @@ def test_multiple_ids_on_same_element_raises():
         validate_rdf(graph)
 
 
+def test_flow_with_no_source_ref_raises():
+    process = parse_bpmn_file("tests/fixtures/valid/minimal_process.bpmn")
+    graph = to_rdf(process)
+
+    flow_uri = next(graph.subjects(RDF.type, SBPMNC.sequenceFlow))
+    source_uri = next(graph.objects(flow_uri, SBPMNP.sourceRef))
+    graph.remove((flow_uri, SBPMNP.sourceRef, source_uri))
+
+    with pytest.raises(RdfValidationError):
+        validate_rdf(graph)
+
+
+def test_flow_with_two_source_refs_raises():
+    process = parse_bpmn_file("tests/fixtures/valid/minimal_process.bpmn")
+    graph = to_rdf(process)
+
+    flow_uri = next(graph.subjects(RDF.type, SBPMNC.sequenceFlow))
+    end_uri = next(graph.subjects(RDF.type, SBPMNC.endEvent))
+    graph.add((flow_uri, SBPMNP.sourceRef, end_uri))
+
+    with pytest.raises(RdfValidationError):
+        validate_rdf(graph)
+
+
 def test_source_ref_pointing_at_non_flow_node_raises():
     process = parse_bpmn_file("tests/fixtures/valid/minimal_process.bpmn")
     graph = to_rdf(process)
