@@ -46,3 +46,6 @@ debug.log
 
 # Thesis folder
 Writing-Bchlr-Latex/
+
+# Frontend build tooling (built bundles under src/.../static/vendor/ are committed)
+frontend/node_modules/

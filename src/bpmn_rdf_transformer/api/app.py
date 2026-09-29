@@ -1,6 +1,6 @@
 import uuid
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, render_template, request
 from rdflib import Graph
 
 from bpmn_rdf_transformer.api.errors import register_error_handlers
@@ -17,6 +17,10 @@ from bpmn_rdf_transformer.writer.bpmn_writer import write_bpmn
 def create_app() -> Flask:
     app = Flask(__name__)
     register_error_handlers(app)
+
+    @app.get("/")
+    def index():
+        return render_template("index.html")
 
     @app.post("/api/processes")
     def upload_process():

@@ -1,0 +1,46 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+.toolbar {
+  padding: 8px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+}
+
+.columns {
+  display: flex;
+  height: 85vh;
+}
+
+#status {
+  padding: 8px;
+  font-family: monospace;
+  white-space: pre-wrap;
+  border-top: 1px solid #ccc;
+}
+
+#status.status-error {
+  background: #f8d7da;
+}
+
+#status.status-success {
+  background: #d4edda;
+}
+
+.col {
+  flex: 1;
+  border: 1px solid #ccc;
+}
+
+#bpmn-container {
+  height: 100%;
+}
+
+#turtle-container {
+  height: 100%;
+  overflow: auto;
+}

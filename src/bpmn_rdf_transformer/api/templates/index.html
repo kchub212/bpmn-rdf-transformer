@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>BPMN RDF Transformer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bpmn-assets/diagram-js.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bpmn-assets/bpmn-js.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bpmn-assets/bpmn-font/css/bpmn-embedded.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div id="app">
+    <div class="toolbar">
+      <input type="file" id="file-input" accept=".bpmn,.xml">
+      <button id="upload-button" type="button">Upload</button>
+      <button id="apply-button" type="button">Apply RDF Changes</button>
+      <button id="reset-button" type="button">Reset RDF</button>
+      <button id="download-button" type="button">Download BPMN</button>
+    </div>
+    <div class="columns">
+      <div class="col"><div id="bpmn-container"></div></div>
+      <div class="col"><div id="turtle-container"></div></div>
+    </div>
+    <div id="status"></div>
+  </div>
+
+  <script src="{{ url_for('static', filename='vendor/bpmn-entry.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/turtle-entry.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
