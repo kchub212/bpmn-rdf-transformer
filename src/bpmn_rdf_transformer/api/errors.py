@@ -5,6 +5,7 @@ from bpmn_rdf_transformer.exceptions import (
     BpmnError,
     BpmnParseError,
     BpmnValidationError,
+    RdfGraphNotFoundError,
     RdfParseError,
     RdfStoreError,
     RdfValidationError,
@@ -16,6 +17,7 @@ STATUS_CODES = {
     RdfParseError: 400,
     RdfValidationError: 422,
     RdfStoreError: 502,
+    RdfGraphNotFoundError: 404,
 }
 
 

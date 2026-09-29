@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from bpmn_rdf_transformer.exceptions import RdfStoreError
+from bpmn_rdf_transformer.exceptions import RdfGraphNotFoundError
 from bpmn_rdf_transformer.parser.bpmn_parser import parse_bpmn_file
 from bpmn_rdf_transformer.rdf import store
 from bpmn_rdf_transformer.rdf.mapper import to_rdf
@@ -25,15 +25,24 @@ def test_store_and_retrieve_graph_round_trip():
     store.delete_graph("integration-test-1")
 
 
-def test_delete_then_get_raises():
+def test_delete_then_get_raises_not_found():
     process = parse_bpmn_file("tests/fixtures/valid/minimal_process.bpmn")
     graph = to_rdf(process)
 
     store.store_graph(graph, "integration-test-2")
     store.delete_graph("integration-test-2")
 
-    with pytest.raises(RdfStoreError):
+    with pytest.raises(RdfGraphNotFoundError):
         store.get_graph("integration-test-2")
+
+
+def test_get_never_created_graph_raises_not_found():
+    with pytest.raises(RdfGraphNotFoundError):
+        store.get_graph("integration-test-never-created")
+
+
+def test_delete_never_created_graph_succeeds():
+    store.delete_graph("integration-test-delete-never-created")  # must not raise
 
 
 def test_run_select_query_is_scoped_to_one_named_graph():

@@ -5,7 +5,7 @@ import pytest
 from rdflib import Graph
 
 from bpmn_rdf_transformer.api.app import create_app
-from bpmn_rdf_transformer.exceptions import RdfStoreError
+from bpmn_rdf_transformer.exceptions import RdfGraphNotFoundError, RdfStoreError
 from bpmn_rdf_transformer.parser.bpmn_parser import parse_bpmn_file
 from bpmn_rdf_transformer.rdf.mapper import to_rdf
 
@@ -67,10 +67,20 @@ def test_get_bpmn_returns_xml(mock_get_graph, mock_from_rdf, client):
 
 
 @patch("bpmn_rdf_transformer.api.app.get_graph")
-def test_get_bpmn_missing_graph_returns_502(mock_get_graph, client):
-    mock_get_graph.side_effect = RdfStoreError("Kein Graph gefunden")
+def test_get_bpmn_nonexistent_graph_id_returns_404(mock_get_graph, client):
+    mock_get_graph.side_effect = RdfGraphNotFoundError("Kein Graph mit id 'missing-id' gefunden")
 
     response = client.get("/api/processes/missing-id/bpmn")
+
+    assert response.status_code == 404
+    assert response.get_json()["type"] == "RdfGraphNotFoundError"
+
+
+@patch("bpmn_rdf_transformer.api.app.get_graph")
+def test_get_bpmn_store_failure_returns_502(mock_get_graph, client):
+    mock_get_graph.side_effect = RdfStoreError("Fuseki nicht erreichbar")
+
+    response = client.get("/api/processes/some-id/bpmn")
 
     assert response.status_code == 502
     assert response.get_json()["type"] == "RdfStoreError"

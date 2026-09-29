@@ -4,7 +4,7 @@ import pytest
 import requests
 from rdflib import Graph
 
-from bpmn_rdf_transformer.exceptions import RdfStoreError
+from bpmn_rdf_transformer.exceptions import RdfGraphNotFoundError, RdfStoreError
 from bpmn_rdf_transformer.parser.bpmn_parser import parse_bpmn_file
 from bpmn_rdf_transformer.rdf import store
 from bpmn_rdf_transformer.rdf.mapper import to_rdf
@@ -70,7 +70,15 @@ def test_get_graph_parses_turtle_response(mock_get):
 
 
 @patch("bpmn_rdf_transformer.rdf.store.requests.get")
-def test_get_graph_raises_on_404(mock_get):
+def test_get_graph_raises_not_found_on_404(mock_get):
+    mock_get.return_value = MagicMock(ok=False, status_code=404, text="not found")
+
+    with pytest.raises(RdfGraphNotFoundError):
+        store.get_graph("missing-id")
+
+
+@patch("bpmn_rdf_transformer.rdf.store.requests.get")
+def test_get_graph_not_found_is_also_a_store_error(mock_get):
     mock_get.return_value = MagicMock(ok=False, status_code=404, text="not found")
 
     with pytest.raises(RdfStoreError):
@@ -94,6 +102,13 @@ def test_delete_graph_raises_on_bad_response(mock_delete):
 
     with pytest.raises(RdfStoreError):
         store.delete_graph("upload-1")
+
+
+@patch("bpmn_rdf_transformer.rdf.store.requests.delete")
+def test_delete_graph_treats_404_as_success(mock_delete):
+    mock_delete.return_value = MagicMock(ok=False, status_code=404, text="not found")
+
+    store.delete_graph("already-gone")  # must not raise
 
 
 @patch("bpmn_rdf_transformer.rdf.store.requests.post")

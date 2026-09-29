@@ -3,7 +3,7 @@ import os
 import requests
 from rdflib import RDF, Graph
 
-from bpmn_rdf_transformer.exceptions import RdfStoreError
+from bpmn_rdf_transformer.exceptions import RdfGraphNotFoundError, RdfStoreError
 from bpmn_rdf_transformer.rdf.mapper import SBPMNC
 
 # SBPMNC/SBPMNP are defined in rdf/mapper.py, even though validation.py,
@@ -58,7 +58,7 @@ def get_graph(graph_id: str) -> Graph:
         raise RdfStoreError(f"Fuseki nicht erreichbar: {e}") from e
 
     if response.status_code == 404:
-        raise RdfStoreError(f"Kein Graph mit id '{graph_id}' gefunden")
+        raise RdfGraphNotFoundError(f"Kein Graph mit id '{graph_id}' gefunden")
     if not response.ok:
         raise RdfStoreError(
             f"Laden fehlgeschlagen (Status {response.status_code}): {response.text}"
@@ -77,6 +77,9 @@ def delete_graph(graph_id: str) -> None:
         )
     except requests.exceptions.RequestException as e:
         raise RdfStoreError(f"Fuseki nicht erreichbar: {e}") from e
+
+    if response.status_code == 404:
+        return  # already absent - the goal state already holds, treat as success
 
     if not response.ok:
         raise RdfStoreError(

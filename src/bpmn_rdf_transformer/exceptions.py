@@ -19,4 +19,8 @@ class RdfValidationError(BpmnError):
 
 
 class RdfStoreError(BpmnError):
-    """Raised when storing, loading or querying an RDF graph in Fuseki fails."""
+    """Raised when Fuseki is unreachable or returns an unexpected failure."""
+
+
+class RdfGraphNotFoundError(RdfStoreError):
+    """Raised when the requested graph_id does not exist in Fuseki."""

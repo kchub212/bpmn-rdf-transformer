@@ -58,4 +58,23 @@ def test_full_flow_upload_view_query_edit_view_delete(client):
     assert delete_response.status_code == 204
 
     after_delete_response = client.get(f"/api/processes/{graph_id}/bpmn")
-    assert after_delete_response.status_code == 502
+    assert after_delete_response.status_code == 404
+    assert after_delete_response.get_json()["type"] == "RdfGraphNotFoundError"
+
+
+def test_delete_process_is_idempotent(client):
+    with open("tests/fixtures/valid/minimal_process.bpmn", "rb") as f:
+        bpmn_bytes = f.read()
+
+    upload_response = client.post(
+        "/api/processes",
+        data={"file": (io.BytesIO(bpmn_bytes), "minimal_process.bpmn")},
+        content_type="multipart/form-data",
+    )
+    graph_id = upload_response.get_json()["graph_id"]
+
+    first_delete = client.delete(f"/api/processes/{graph_id}")
+    assert first_delete.status_code == 204
+
+    second_delete = client.delete(f"/api/processes/{graph_id}")
+    assert second_delete.status_code == 204
