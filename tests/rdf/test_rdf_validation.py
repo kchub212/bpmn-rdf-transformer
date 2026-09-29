@@ -36,8 +36,13 @@ def test_duplicate_id_within_same_process_raises():
 
     graph.set((start_uri, SBPMNP.id, end_id))
 
-    with pytest.raises(RdfValidationError):
+    with pytest.raises(RdfValidationError) as exc_info:
         validate_rdf(graph)
+
+    message = str(exc_info.value)
+    assert f"'{end_id}'" in message
+    assert "(2 Elemente)" in message
+    assert "built-in method" not in message
 
 
 def test_process_id_equal_to_element_id_does_not_raise():

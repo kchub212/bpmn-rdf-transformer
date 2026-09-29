@@ -52,7 +52,7 @@ def validate_rdf(graph: Graph) -> None:
         row = duplicates[0]
         raise RdfValidationError(
             f"Doppelte ID '{row.id}' innerhalb des Prozesses {row.process} gefunden "
-            f"({row.count} Elemente)"
+            f"({row['count']} Elemente)"
         )
 
     # Rule 3: every process and every flowElement must have exactly one sbpmnp:id,
